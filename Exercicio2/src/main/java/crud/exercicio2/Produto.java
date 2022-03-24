@@ -4,6 +4,14 @@ public class Produto {
 	public Produto() {
 	}
 	
+	public Produto(int codigo, String nome, String descricao, float preco, String categoria) {
+		this.codigo = codigo;
+		this.nome = nome;
+		this.descricao = descricao;
+		this.preco = preco;
+		this.categoria = categoria;
+	}
+	
 	private int codigo;
 	private String nome, descricao,categoria;
 	private float preco;
