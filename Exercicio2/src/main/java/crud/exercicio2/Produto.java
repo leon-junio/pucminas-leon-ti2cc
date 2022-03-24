@@ -9,11 +9,11 @@ public class Produto {
 	private float preco;
 	
 	
-	public int getIdProduto() {
+	public int getCodigo() {
 		return codigo;
 	}
-	public void setIdProduto(int idProduto) {
-		this.codigo = idProduto;
+	public void setCodigo(int codigo) {
+		this.codigo = codigo;
 	}
 	public String getNome() {
 		return nome;
@@ -42,7 +42,7 @@ public class Produto {
 	
 	@Override
 	public String toString() {
-		return "Produto [idProduto=" + codigo + ", nome=" + nome + ", descricao=" + descricao + ", categoria="
+		return "Produto [codigo=" + codigo + ", nome=" + nome + ", descricao=" + descricao + ", categoria="
 				+ categoria + ", preco=" + preco + "]";
 	}
 	
