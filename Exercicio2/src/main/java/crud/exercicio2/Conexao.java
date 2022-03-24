@@ -4,21 +4,21 @@ import java.sql.*;
 
 public class Conexao {
 
-	private Connection conexao;
+	private static Connection conexao;
+	private static String driverName = "org.postgresql.Driver";
+	private static String serverName = "localhost:8060";
+	private static String mydatabase = "teste";
+	private static int porta = 5432;
+	private static String username = "ti2cc";
+	private static String password = "ti@cc";
 
 	public Conexao() {
 		conexao = null;
 	}
 
-	public boolean conectar() {
-		String driverName = "org.postgresql.Driver";
-		String serverName = "localhost:8060";
-		String mydatabase = "teste";
-		int porta = 5432;
-		String url = "jdbc:postgresql://" + serverName + ":" + porta + "/" + mydatabase;
-		String username = "ti2cc";
-		String password = "ti@cc";
+	private static boolean conectar() {
 		boolean status = false;
+		String url = "jdbc:postgresql://" + serverName + ":" + porta + "/" + mydatabase;
 		try {
 			Class.forName(driverName);
 			conexao = DriverManager.getConnection(url, username, password);
@@ -29,22 +29,43 @@ public class Conexao {
 		} catch (SQLException e) {
 			System.err.println("Conexão NÃO efetuada com o postgres -- " + e.getMessage());
 		}
-
 		return status;
 	}
 
-	public boolean close() {
-		boolean status = false;
+	public static boolean close() {
+		boolean info = false;
 		try {
 			conexao.close();
-			status = true;
+			info = true;
 		} catch (SQLException e) {
 			System.err.println(e.getMessage());
 		}
-		return status;
+		return info;
 	}
-	
-	
+
+	public static boolean getConexao() {
+		boolean info = false;
+		try {
+			if (conectionState()) {
+				info = conectar();
+			}
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+		return info;
+	}
+
+	public static boolean conectionState() {
+		return conexao != null;
+	}
+
+	public static Statement createSt() throws SQLException {
+		Statement st = null;
+		if (getConexao()) {
+			st = conexao.createStatement();
+		}
+		return st;
+	}
 	
 
 }
