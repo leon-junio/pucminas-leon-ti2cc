@@ -12,8 +12,9 @@ public class Principal {
 		Scanner scan = new Scanner(System.in);
 		DAOProduto dao = new DAOProduto();
 		try {
+			System.out.println("CRUD DE CADASTRO DE PRODUTOS");
 			do {
-				System.out.println("CRUD DE CADASTRO DE PRODUTOS");
+				System.out.println("\nEscolha uma opção:");
 				System.out.println("1- Listar produtos");
 				System.out.println("2- Inserir um novo produto");
 				System.out.println("3- Excluir um produto");
