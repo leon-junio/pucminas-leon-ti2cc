@@ -9,11 +9,16 @@ public class DAOProduto {
 		boolean status = false;
 		try {
 			Statement st = Conexao.createSt();
-			st.executeUpdate("INSERT INTO Produto (codigo, nome, descricao, preco, categoria) " + "VALUES ("
-					+ produto.getCodigo() + ", '" + produto.getNome() + "', '" + produto.getDescricao() + "', "
-					+ produto.getPreco() + " , '" + produto.getCategoria() + "');");
+			int code = nextCodigo();
+			int result = st.executeUpdate("INSERT INTO \"public\".\"Produto\" (codigo, nome, descricao, preco, categoria) " + "VALUES (" + code
+					+ ", '" + produto.getNome() + "', '" + produto.getDescricao() + "', " + produto.getPreco() + " , '"
+					+ produto.getCategoria() + "');");
 			st.close();
-			status = true;
+			if(result>0) {
+				status = true;
+			}else {
+				status = false;
+			}
 		} catch (SQLException u) {
 			throw new RuntimeException(u);
 		}
@@ -24,12 +29,16 @@ public class DAOProduto {
 		boolean status = false;
 		try {
 			Statement st = Conexao.createSt();
-			String sql = "UPDATE Produto SET nome = '" + produto.getNome() + "', descricao = '" + produto.getDescricao()
+			String sql = "UPDATE \"public\".\"Produto\" SET nome = '" + produto.getNome() + "', descricao = '" + produto.getDescricao()
 					+ "', preco = " + produto.getPreco() + " , categoria = '" + produto.getCategoria() + "' "
 					+ " WHERE codigo = " + produto.getCodigo();
-			st.executeUpdate(sql);
+			int result = st.executeUpdate(sql);
 			st.close();
-			status = true;
+			if(result>0) {
+				status = true;
+			}else {
+				status = false;
+			}
 		} catch (SQLException u) {
 			throw new RuntimeException(u);
 		}
@@ -40,28 +49,40 @@ public class DAOProduto {
 		boolean status = false;
 		try {
 			Statement st = Conexao.createSt();
-			st.executeUpdate("DELETE FROM usuario WHERE codigo = " + codigo);
+			int result = st.executeUpdate("DELETE FROM \"public\".\"Produto\" WHERE codigo = " + codigo);
 			st.close();
-			status = true;
+			if(result>0) {
+				status = true;
+			}else {
+				status = false;
+			}
 		} catch (SQLException u) {
 			throw new RuntimeException(u);
 		}
 		return status;
 	}
 
+	private int nextCodigo() {
+		int cod = 0;
+		ArrayList<Produto> array = getProdutos();
+		if (!array.isEmpty()) {
+			cod = array.get(array.size() - 1).getCodigo() + 1;
+		} else {
+			cod++;
+		}
+		return cod;
+	}
+
 	public ArrayList<Produto> getProdutos() {
 		ArrayList<Produto> lista = null;
 		try {
-			Statement st = Conexao.createSt();
-			ResultSet rs = st.executeQuery("SELECT * FROM Produto");
-			if (rs.next()) {
-				rs.last();
-				lista = new ArrayList<>();
-				while (rs.next()) {
-					Produto prod = new Produto(rs.getInt("codigo"),rs.getString("nome"),rs.getString("descricao"),
-							rs.getFloat("preco"),rs.getString("categoria"));
-					lista.add(prod);
-				}
+			Statement st = Conexao.createStIs();
+			ResultSet rs = st.executeQuery("SELECT * FROM \"public\".\"Produto\";");
+			lista = new ArrayList<>();
+			while (rs.next()) {
+				Produto prod = new Produto(rs.getInt("codigo"), rs.getString("nome"), rs.getString("descricao"),
+						rs.getFloat("preco"), rs.getString("categoria"));
+				lista.add(prod);
 			}
 			rs.close();
 			st.close();
