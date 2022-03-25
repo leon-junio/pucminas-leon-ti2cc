@@ -6,7 +6,7 @@ public class Conexao {
 
 	private static Connection conexao;
 	private static String driverName = "org.postgresql.Driver";
-	private static String serverName = "localhost:8060";
+	private static String serverName = "localhost";
 	private static String mydatabase = "teste";
 	private static int porta = 5432;
 	private static String username = "ti2cc";
@@ -22,7 +22,7 @@ public class Conexao {
 		try {
 			Class.forName(driverName);
 			conexao = DriverManager.getConnection(url, username, password);
-			status = (conexao == null);
+			status = (conexao != null);
 			System.out.println("Conexão efetuada com o postgres!");
 		} catch (ClassNotFoundException e) {
 			System.err.println("Conexão NÃO efetuada com o postgres -- Driver não encontrado -- " + e.getMessage());
@@ -46,8 +46,10 @@ public class Conexao {
 	public static boolean getConexao() {
 		boolean info = false;
 		try {
-			if (conectionState()) {
+			if (conexao == null) {
 				info = conectar();
+			}else {
+				info = true;
 			}
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
@@ -67,5 +69,12 @@ public class Conexao {
 		return st;
 	}
 	
+	public static Statement createStIs() throws SQLException {
+		Statement st = null;
+		if (getConexao()) {
+			st = conexao.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+		}
+		return st;
+	}
 
 }
