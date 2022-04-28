@@ -5,40 +5,39 @@ import java.time.LocalDate;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;
-import dao.ProdutoDAO;
-import model.Produto;
+import dao.DAOCliente;
+import model.Cliente;
 import spark.Request;
 import spark.Response;
 
-
 public class ClienteService {
 
-	private ProdutoDAO produtoDAO = new ProdutoDAO();
+	private DAOCliente clienteDAO = new DAOCliente();
 	private String form;
 	private final int FORM_INSERT = 1;
 	private final int FORM_DETAIL = 2;
 	private final int FORM_UPDATE = 3;
 	private final int FORM_ORDERBY_ID = 1;
-	private final int FORM_ORDERBY_DESCRICAO = 2;
-	private final int FORM_ORDERBY_PRECO = 3;
+	private final int FORM_ORDERBY_NOME = 2;
+	private final int FORM_ORDERBY_CPF = 3;
 	
 	
-	public ProdutoService() {
+	public ClienteService() {
 		makeForm();
 	}
 
 	
 	public void makeForm() {
-		makeForm(FORM_INSERT, new Produto(), FORM_ORDERBY_DESCRICAO);
+		makeForm(FORM_INSERT, new Cliente(), FORM_ORDERBY_NOME);
 	}
 
 	
 	public void makeForm(int orderBy) {
-		makeForm(FORM_INSERT, new Produto(), orderBy);
+		makeForm(FORM_INSERT, new Cliente(), orderBy);
 	}
 
 	
-	public void makeForm(int tipo, Produto produto, int orderBy) {
+	public void makeForm(int tipo, Cliente cliente, int orderBy) {
 		String nomeArquivo = "form.html";
 		form = "";
 		try{
@@ -48,128 +47,128 @@ public class ClienteService {
 		    }
 		    entrada.close();
 		}  catch (Exception e) { System.out.println(e.getMessage()); }
-		
-		String umProduto = "";
+		String umCliente = "";
 		if(tipo != FORM_INSERT) {
-			umProduto += "\t<table width=\"80%\" bgcolor=\"#f3f3f3\" align=\"center\">";
-			umProduto += "\t\t<tr>";
-			umProduto += "\t\t\t<td align=\"left\"><font size=\"+2\"><b>&nbsp;&nbsp;&nbsp;<a href=\"/produto/list/1\">Novo Produto</a></b></font></td>";
-			umProduto += "\t\t</tr>";
-			umProduto += "\t</table>";
-			umProduto += "\t<br>";			
+			umCliente += "\t<table width=\"80%\" bgcolor=\"#f3f3f3\" align=\"center\">";
+			umCliente += "\t\t<tr>";
+			umCliente += "\t\t\t<td align=\"left\"><font size=\"+2\"><b>&nbsp;&nbsp;&nbsp;<a href=\"/cliente/list/1\">Novo Cliente</a></b></font></td>";
+			umCliente += "\t\t</tr>";
+			umCliente += "\t</table>";
+			umCliente += "\t<br>";			
 		}
 		
 		if(tipo == FORM_INSERT || tipo == FORM_UPDATE) {
-			String action = "/produto/";
-			String name, descricao, buttonLabel;
+			String action = "/cliente/";
+			String name, nome, buttonLabel;
 			if (tipo == FORM_INSERT){
 				action += "insert";
-				name = "Inserir Produto";
-				descricao = "leite, pão, ...";
+				name = "Inserir Cliente";
+				nome = "João, Gabriel, ...";
 				buttonLabel = "Inserir";
 			} else {
-				action += "update/" + produto.getID();
-				name = "Atualizar Produto (ID " + produto.getID() + ")";
-				descricao = produto.getDescricao();
+				action += "update/" + cliente.getId_cliente();
+				name = "Atualizar Cliente (ID " + cliente.getId_cliente() + ")";
+				nome = cliente.getNome();
 				buttonLabel = "Atualizar";
 			}
-			umProduto += "\t<form class=\"form--register\" action=\"" + action + "\" method=\"post\" id=\"form-add\">";
-			umProduto += "\t<table width=\"80%\" bgcolor=\"#f3f3f3\" align=\"center\">";
-			umProduto += "\t\t<tr>";
-			umProduto += "\t\t\t<td colspan=\"3\" align=\"left\"><font size=\"+2\"><b>&nbsp;&nbsp;&nbsp;" + name + "</b></font></td>";
-			umProduto += "\t\t</tr>";
-			umProduto += "\t\t<tr>";
-			umProduto += "\t\t\t<td colspan=\"3\" align=\"left\">&nbsp;</td>";
-			umProduto += "\t\t</tr>";
-			umProduto += "\t\t<tr>";
-			umProduto += "\t\t\t<td>&nbsp;Descrição: <input class=\"input--register\" type=\"text\" name=\"descricao\" value=\""+ descricao +"\"></td>";
-			umProduto += "\t\t\t<td>Preco: <input class=\"input--register\" type=\"text\" name=\"preco\" value=\""+ produto.getPreco() +"\"></td>";
-			umProduto += "\t\t\t<td>Quantidade: <input class=\"input--register\" type=\"text\" name=\"quantidade\" value=\""+ produto.getQuantidade() +"\"></td>";
-			umProduto += "\t\t</tr>";
-			umProduto += "\t\t<tr>";
-			umProduto += "\t\t\t<td>&nbsp;Data de fabricação: <input class=\"input--register\" type=\"text\" name=\"dataFabricacao\" value=\""+ produto.getDataFabricacao().toString() + "\"></td>";
-			umProduto += "\t\t\t<td>Data de validade: <input class=\"input--register\" type=\"text\" name=\"dataValidade\" value=\""+ produto.getDataValidade().toString() + "\"></td>";
-			umProduto += "\t\t\t<td align=\"center\"><input type=\"submit\" value=\""+ buttonLabel +"\" class=\"input--main__style input--button\"></td>";
-			umProduto += "\t\t</tr>";
-			umProduto += "\t</table>";
-			umProduto += "\t</form>";		
+			umCliente += "\t<form class=\"form--register\" action=\"" + action + "\" method=\"post\" id=\"form-add\">";
+			umCliente += "\t<table width=\"80%\" bgcolor=\"#f3f3f3\" align=\"center\">";
+			umCliente += "\t\t<tr>";
+			umCliente += "\t\t\t<td colspan=\"3\" align=\"left\"><font size=\"+2\"><b>&nbsp;&nbsp;&nbsp;" + name + "</b></font></td>";
+			umCliente += "\t\t</tr>";
+			umCliente += "\t\t<tr>";
+			umCliente += "\t\t\t<td colspan=\"3\" align=\"left\">&nbsp;</td>";
+			umCliente += "\t\t</tr>";
+			umCliente += "\t\t<tr>";
+			umCliente += "\t\t\t<td>&nbsp;Nome: <input class=\"input--register\" type=\"text\" name=\"nome\" value=\""+ nome +"\"></td>";
+			umCliente += "\t\t\t<td>Biografia: <input class=\"input--register\" type=\"text\" name=\"nome\" value=\""+ cliente.getBiografia() +"\"></td>";
+			umCliente += "\t\t\t<td>CPF: <input class=\"input--register\" type=\"text\" name=\"nome\" value=\""+ cliente.getCpf() +"\"></td>";
+			umCliente += "\t\t\t<td>RG: <input class=\"input--register\" type=\"text\" name=\"nome\" value=\""+ cliente.getRg() +"\"></td>";
+			umCliente += "\t\t\t<td align=\"center\"><input type=\"submit\" value=\""+ buttonLabel +"\" class=\"input--main__style input--button\"></td>";
+			umCliente += "\t\t</tr>";
+			umCliente += "\t</table>";
+			umCliente += "\t</form>";		
 		} else if (tipo == FORM_DETAIL){
-			umProduto += "\t<table width=\"80%\" bgcolor=\"#f3f3f3\" align=\"center\">";
-			umProduto += "\t\t<tr>";
-			umProduto += "\t\t\t<td colspan=\"3\" align=\"left\"><font size=\"+2\"><b>&nbsp;&nbsp;&nbsp;Detalhar Produto (ID " + produto.getID() + ")</b></font></td>";
-			umProduto += "\t\t</tr>";
-			umProduto += "\t\t<tr>";
-			umProduto += "\t\t\t<td colspan=\"3\" align=\"left\">&nbsp;</td>";
-			umProduto += "\t\t</tr>";
-			umProduto += "\t\t<tr>";
-			umProduto += "\t\t\t<td>&nbsp;Descrição: "+ produto.getDescricao() +"</td>";
-			umProduto += "\t\t\t<td>Preco: "+ produto.getPreco() +"</td>";
-			umProduto += "\t\t\t<td>Quantidade: "+ produto.getQuantidade() +"</td>";
-			umProduto += "\t\t</tr>";
-			umProduto += "\t\t<tr>";
-			umProduto += "\t\t\t<td>&nbsp;Data de fabricação: "+ produto.getDataFabricacao().toString() + "</td>";
-			umProduto += "\t\t\t<td>Data de validade: "+ produto.getDataValidade().toString() + "</td>";
-			umProduto += "\t\t\t<td>&nbsp;</td>";
-			umProduto += "\t\t</tr>";
-			umProduto += "\t</table>";		
+			umCliente += "\t<table width=\"80%\" bgcolor=\"#f3f3f3\" align=\"center\">";
+			umCliente += "\t\t<tr>";
+			umCliente += "\t\t\t<td colspan=\"3\" align=\"left\"><font size=\"+2\"><b>&nbsp;&nbsp;&nbsp;Detalhar Cliente (ID " + cliente.getId_cliente() + ")</b></font></td>";
+			umCliente += "\t\t</tr>";
+			umCliente += "\t\t<tr>";
+			umCliente += "\t\t\t<td colspan=\"3\" align=\"left\">&nbsp;</td>";
+			umCliente += "\t\t</tr>";
+			umCliente += "\t\t<tr>";
+			umCliente += "\t\t\t<td>&nbsp;Nome: <input class=\"input--register\" type=\"text\" name=\"nome\" value=\""+ cliente.getNome() +"\"></td>";
+			umCliente += "\t\t\t<td>Biografia: <input class=\"input--register\" type=\"text\" name=\"nome\" value=\""+ cliente.getBiografia() +"\"></td>";
+			umCliente += "\t\t\t<td>CPF: <input class=\"input--register\" type=\"text\" name=\"nome\" value=\""+ cliente.getCpf() +"\"></td>";
+			umCliente += "\t\t\t<td>RG: <input class=\"input--register\" type=\"text\" name=\"nome\" value=\""+ cliente.getRg() +"\"></td>";
+			umCliente += "\t\t\t<td>&nbsp;</td>";
+			umCliente += "\t\t</tr>";
+			umCliente += "\t</table>";		
 		} else {
 			System.out.println("ERRO! Tipo não identificado " + tipo);
 		}
-		form = form.replaceFirst("<UM-PRODUTO>", umProduto);
+		form = form.replaceFirst("<UM-CLIENTE>", umCliente);
 		
 		String list = new String("<table width=\"80%\" align=\"center\" bgcolor=\"#f3f3f3\">");
-		list += "\n<tr><td colspan=\"6\" align=\"left\"><font size=\"+2\"><b>&nbsp;&nbsp;&nbsp;Relação de Produtos</b></font></td></tr>\n" +
+		list += "\n<tr><td colspan=\"6\" align=\"left\"><font size=\"+2\"><b>&nbsp;&nbsp;&nbsp;Relação de Clientes</b></font></td></tr>\n" +
 				"\n<tr><td colspan=\"6\">&nbsp;</td></tr>\n" +
     			"\n<tr>\n" + 
-        		"\t<td><a href=\"/produto/list/" + FORM_ORDERBY_ID + "\"><b>ID</b></a></td>\n" +
-        		"\t<td><a href=\"/produto/list/" + FORM_ORDERBY_DESCRICAO + "\"><b>Descrição</b></a></td>\n" +
-        		"\t<td><a href=\"/produto/list/" + FORM_ORDERBY_PRECO + "\"><b>Preço</b></a></td>\n" +
+        		"\t<td><a href=\"/cliente/list/" + FORM_ORDERBY_ID + "\"><b>ID</b></a></td>\n" +
+        		"\t<td><a href=\"/cliente/list/" + FORM_ORDERBY_NOME + "\"><b>Nome</b></a></td>\n" +
+        		"\t<td><a href=\"/cliente/list/" + FORM_ORDERBY_CPF + "\"><b>CPF</b></a></td>\n" +
         		"\t<td width=\"100\" align=\"center\"><b>Detalhar</b></td>\n" +
         		"\t<td width=\"100\" align=\"center\"><b>Atualizar</b></td>\n" +
         		"\t<td width=\"100\" align=\"center\"><b>Excluir</b></td>\n" +
         		"</tr>\n";
 		
-		List<Produto> produtos;
-		if (orderBy == FORM_ORDERBY_ID) {                 	produtos = produtoDAO.getOrderByID();
-		} else if (orderBy == FORM_ORDERBY_DESCRICAO) {		produtos = produtoDAO.getOrderByDescricao();
-		} else if (orderBy == FORM_ORDERBY_PRECO) {			produtos = produtoDAO.getOrderByPreco();
-		} else {											produtos = produtoDAO.get();
+		List<Cliente> clientes;
+		if (orderBy == FORM_ORDERBY_ID) {                 	clientes = clienteDAO.getOrderByID();
+		} else if (orderBy == FORM_ORDERBY_NOME) {		clientes = clienteDAO.getOrderByNome();
+		} else if (orderBy == FORM_ORDERBY_CPF) {			clientes = clienteDAO.getOrderByCpf();
+		} else {											clientes = clienteDAO.get();
 		}
 
 		int i = 0;
 		String bgcolor = "";
-		for (Produto p : produtos) {
+		for (Cliente p : clientes) {
 			bgcolor = (i++ % 2 == 0) ? "#fff5dd" : "#dddddd";
 			list += "\n<tr bgcolor=\""+ bgcolor +"\">\n" + 
-            		  "\t<td>" + p.getID() + "</td>\n" +
-            		  "\t<td>" + p.getDescricao() + "</td>\n" +
-            		  "\t<td>" + p.getPreco() + "</td>\n" +
-            		  "\t<td align=\"center\" valign=\"middle\"><a href=\"/produto/" + p.getID() + "\"><img src=\"/image/detail.png\" width=\"20\" height=\"20\"/></a></td>\n" +
-            		  "\t<td align=\"center\" valign=\"middle\"><a href=\"/produto/update/" + p.getID() + "\"><img src=\"/image/update.png\" width=\"20\" height=\"20\"/></a></td>\n" +
-            		  "\t<td align=\"center\" valign=\"middle\"><a href=\"javascript:confirmarDeleteProduto('" + p.getID() + "', '" + p.getDescricao() + "', '" + p.getPreco() + "');\"><img src=\"/image/delete.png\" width=\"20\" height=\"20\"/></a></td>\n" +
+            		  "\t<td>" + p.getId_cliente() + "</td>\n" +
+            		  "\t<td>" + p.getNome() + "</td>\n" +
+            		  "\t<td align=\"center\" valign=\"middle\"><a href=\"/cliente/" + p.getId_cliente() + "\"><img src=\"/image/detail.png\" width=\"20\" height=\"20\"/></a></td>\n" +
+            		  "\t<td align=\"center\" valign=\"middle\"><a href=\"/cliente/update/" + p.getId_cliente() + "\"><img src=\"/image/update.png\" width=\"20\" height=\"20\"/></a></td>\n" +
+            		  "\t<td align=\"center\" valign=\"middle\"><a href=\"javascript:confirmarDeleteCliente('" + p.getId_cliente() + "', '" + p.getNome() + "');\"><img src=\"/image/delete.png\" width=\"20\" height=\"20\"/></a></td>\n" +
             		  "</tr>\n";
 		}
 		list += "</table>";		
-		form = form.replaceFirst("<LISTAR-PRODUTO>", list);				
+		form = form.replaceFirst("<LISTAR-CLIENTE>", list);				
 	}
 	
 	
+	
+	
+	
+	
+	
+	
+	///////////////////////////////////
+	
+	
 	public Object insert(Request request, Response response) {
-		String descricao = request.queryParams("descricao");
-		float preco = Float.parseFloat(request.queryParams("preco"));
-		int quantidade = Integer.parseInt(request.queryParams("quantidade"));
-		LocalDateTime dataFabricacao = LocalDateTime.parse(request.queryParams("dataFabricacao"));
-		LocalDate dataValidade = LocalDate.parse(request.queryParams("dataValidade"));
+		String nome = request.queryParams("nome");
+		String biografia = request.queryParams("biografia");
+		String cpf = request.queryParams("cpf");
+		String rg = request.queryParams("rg");
 		
 		String resp = "";
 		
-		Produto produto = new Produto(-1, descricao, preco, quantidade, dataFabricacao, dataValidade);
+		Cliente cliente = new Cliente(-1,nome,cpf,rg,biografia);
 		
-		if(produtoDAO.insert(produto) == true) {
-            resp = "Produto (" + descricao + ") inserido!";
+		if(clienteDAO.insert(cliente) == true) {
+            resp = "Cliente (" + nome + ") inserido!";
             response.status(201); // 201 Created
 		} else {
-			resp = "Produto (" + descricao + ") não inserido!";
+			resp = "Cliente (" + nome + ") não inserido!";
 			response.status(404); // 404 Not found
 		}
 			
@@ -180,14 +179,14 @@ public class ClienteService {
 	
 	public Object get(Request request, Response response) {
 		int id = Integer.parseInt(request.params(":id"));		
-		Produto produto = (Produto) produtoDAO.get(id);
+		Cliente cliente = (Cliente) clienteDAO.get(id);
 		
-		if (produto != null) {
+		if (cliente != null) {
 			response.status(200); // success
-			makeForm(FORM_DETAIL, produto, FORM_ORDERBY_DESCRICAO);
+			makeForm(FORM_DETAIL, cliente, FORM_ORDERBY_NOME);
         } else {
             response.status(404); // 404 Not found
-            String resp = "Produto " + id + " não encontrado.";
+            String resp = "Cliente " + id + " não encontrado.";
     		makeForm();
     		form.replaceFirst("<input type=\"hidden\" id=\"msg\" name=\"msg\" value=\"\">", "<input type=\"hidden\" id=\"msg\" name=\"msg\" value=\""+ resp +"\">");     
         }
@@ -198,14 +197,14 @@ public class ClienteService {
 	
 	public Object getToUpdate(Request request, Response response) {
 		int id = Integer.parseInt(request.params(":id"));		
-		Produto produto = (Produto) produtoDAO.get(id);
+		Cliente cliente = (Cliente) clienteDAO.get(id);
 		
-		if (produto != null) {
+		if (cliente != null) {
 			response.status(200); // success
-			makeForm(FORM_UPDATE, produto, FORM_ORDERBY_DESCRICAO);
+			makeForm(FORM_UPDATE, cliente, FORM_ORDERBY_NOME);
         } else {
             response.status(404); // 404 Not found
-            String resp = "Produto " + id + " não encontrado.";
+            String resp = "Cliente " + id + " não encontrado.";
     		makeForm();
     		form.replaceFirst("<input type=\"hidden\" id=\"msg\" name=\"msg\" value=\"\">", "<input type=\"hidden\" id=\"msg\" name=\"msg\" value=\""+ resp +"\">");     
         }
@@ -224,21 +223,21 @@ public class ClienteService {
 	
 	public Object update(Request request, Response response) {
         int id = Integer.parseInt(request.params(":id"));
-		Produto produto = produtoDAO.get(id);
+		Cliente cliente = clienteDAO.get(id);
         String resp = "";       
 
-        if (produto != null) {
-        	produto.setDescricao(request.queryParams("descricao"));
-        	produto.setPreco(Float.parseFloat(request.queryParams("preco")));
-        	produto.setQuantidade(Integer.parseInt(request.queryParams("quantidade")));
-        	produto.setDataFabricacao(LocalDateTime.parse(request.queryParams("dataFabricacao")));
-        	produto.setDataValidade(LocalDate.parse(request.queryParams("dataValidade")));
-        	produtoDAO.update(produto);
+        if (cliente != null) {
+        	cliente.setNome(request.queryParams("nome"));
+        	cliente.setPreco(Float.parseFloat(request.queryParams("preco")));
+        	cliente.setQuantidade(Integer.parseInt(request.queryParams("quantidade")));
+        	cliente.setDataFabricacao(LocalDateTime.parse(request.queryParams("dataFabricacao")));
+        	cliente.setDataValidade(LocalDate.parse(request.queryParams("dataValidade")));
+        	clienteDAO.update(cliente);
         	response.status(200); // success
-            resp = "Produto (ID " + produto.getID() + ") atualizado!";
+            resp = "Cliente (ID " + cliente.getId_cliente() + ") atualizado!";
         } else {
             response.status(404); // 404 Not found
-            resp = "Produto (ID \" + produto.getId() + \") não encontrado!";
+            resp = "Cliente (ID \" + cliente.getId() + \") não encontrado!";
         }
 		makeForm();
 		return form.replaceFirst("<input type=\"hidden\" id=\"msg\" name=\"msg\" value=\"\">", "<input type=\"hidden\" id=\"msg\" name=\"msg\" value=\""+ resp +"\">");
@@ -247,16 +246,16 @@ public class ClienteService {
 	
 	public Object delete(Request request, Response response) {
         int id = Integer.parseInt(request.params(":id"));
-        Produto produto = produtoDAO.get(id);
+        Cliente cliente = clienteDAO.get(id);
         String resp = "";       
 
-        if (produto != null) {
-            produtoDAO.delete(id);
+        if (cliente != null) {
+            clienteDAO.delete(id);
             response.status(200); // success
-            resp = "Produto (" + id + ") excluído!";
+            resp = "Cliente (" + id + ") excluído!";
         } else {
             response.status(404); // 404 Not found
-            resp = "Produto (" + id + ") não encontrado!";
+            resp = "Cliente (" + id + ") não encontrado!";
         }
 		makeForm();
 		return form.replaceFirst("<input type=\"hidden\" id=\"msg\" name=\"msg\" value=\"\">", "<input type=\"hidden\" id=\"msg\" name=\"msg\" value=\""+ resp +"\">");

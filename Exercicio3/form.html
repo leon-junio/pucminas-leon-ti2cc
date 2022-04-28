@@ -2,15 +2,15 @@
 <head>
 <meta content="text/html; charset = UTF-8" http-equiv="content-type">
 
-<title>Controle de Estoque</title>
+<title>Controle de Pessoas</title>
 </head>
 
 <script type="text/javascript">
 
-function confirmarDeleteProduto(id, descricao, preco) {  
+function confirmarDeleteCliente(id, nome) {  
 	
-    if (confirm('Confirmar a exclusão do produto [' + descricao + '] (ID ' + id + ') com preço R$ ' + preco)) {  
-        location.href = '/produto/delete/' + id;
+    if (confirm('Confirmar a exclusão do cliente "' + nome + '" (ID ' + id + ') ')) {  
+        location.href = '/cliente/delete/' + id;
     }
 }
 function onLoad() {
@@ -22,11 +22,11 @@ function onLoad() {
 
 
 <body onload="onLoad()">
-	<h1>Controle de Estoque</h1>
+	<h1>Controle de Pessoas</h1>
 	<input type="hidden" id="msg" name="msg" value="">
-    <UM-PRODUTO>
+    <UM-CLIENTE>
 	<br>
-	<LISTAR-PRODUTO>
+	<LISTAR-CLIENTE>
 	<style>
 * {
 	box-sizing: border-box;
