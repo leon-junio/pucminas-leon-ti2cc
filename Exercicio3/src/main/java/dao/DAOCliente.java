@@ -59,8 +59,8 @@ public class DAOCliente extends Conexao {
 		return get("id_cliente");
 	}
 
-	public List<Cliente> getOrderByBiografia() {
-		return get("biografia");
+	public List<Cliente> getOrderByNome() {
+		return get("nome");
 	}
 
 	public List<Cliente> getOrderByCpf() {
