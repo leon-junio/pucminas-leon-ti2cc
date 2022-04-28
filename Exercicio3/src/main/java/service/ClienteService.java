@@ -1,9 +1,7 @@
 package service;
 
 import java.util.Scanner;
-import java.time.LocalDate;
 import java.io.File;
-import java.time.LocalDateTime;
 import java.util.List;
 import dao.DAOCliente;
 import model.Cliente;
@@ -80,10 +78,10 @@ public class ClienteService {
 			umCliente += "\t\t\t<td colspan=\"3\" align=\"left\">&nbsp;</td>";
 			umCliente += "\t\t</tr>";
 			umCliente += "\t\t<tr>";
-			umCliente += "\t\t\t<td>&nbsp;Nome: <input class=\"input--register\" type=\"text\" name=\"nome\" value=\""+ nome +"\"></td>";
-			umCliente += "\t\t\t<td>Biografia: <input class=\"input--register\" type=\"text\" name=\"nome\" value=\""+ cliente.getBiografia() +"\"></td>";
-			umCliente += "\t\t\t<td>CPF: <input class=\"input--register\" type=\"text\" name=\"nome\" value=\""+ cliente.getCpf() +"\"></td>";
-			umCliente += "\t\t\t<td>RG: <input class=\"input--register\" type=\"text\" name=\"nome\" value=\""+ cliente.getRg() +"\"></td>";
+			umCliente += "\t\t\t<td>&nbsp;Nome: <input class=\"input--register\" type=\"text\" name=\"nome\" value=\"\" placehoder=\""+nome+"\"></td>";
+			umCliente += "\t\t\t<td>Biografia: <input class=\"input--register\" type=\"text\" name=\"biografia\" value=\""+ cliente.getBiografia() +"\"></td>";
+			umCliente += "\t\t\t<td>CPF: <input class=\"input--register\" type=\"text\" name=\"cpf\" value=\""+ cliente.getCpf() +"\"></td>";
+			umCliente += "\t\t\t<td>RG: <input class=\"input--register\" type=\"text\" name=\"rg\" value=\""+ cliente.getRg() +"\"></td>";
 			umCliente += "\t\t\t<td align=\"center\"><input type=\"submit\" value=\""+ buttonLabel +"\" class=\"input--main__style input--button\"></td>";
 			umCliente += "\t\t</tr>";
 			umCliente += "\t</table>";
@@ -98,9 +96,9 @@ public class ClienteService {
 			umCliente += "\t\t</tr>";
 			umCliente += "\t\t<tr>";
 			umCliente += "\t\t\t<td>&nbsp;Nome: <input class=\"input--register\" type=\"text\" name=\"nome\" value=\""+ cliente.getNome() +"\"></td>";
-			umCliente += "\t\t\t<td>Biografia: <input class=\"input--register\" type=\"text\" name=\"nome\" value=\""+ cliente.getBiografia() +"\"></td>";
-			umCliente += "\t\t\t<td>CPF: <input class=\"input--register\" type=\"text\" name=\"nome\" value=\""+ cliente.getCpf() +"\"></td>";
-			umCliente += "\t\t\t<td>RG: <input class=\"input--register\" type=\"text\" name=\"nome\" value=\""+ cliente.getRg() +"\"></td>";
+			umCliente += "\t\t\t<td>Biografia: <input class=\"input--register\" type=\"text\" name=\"biografia\" value=\""+ cliente.getBiografia() +"\"></td>";
+			umCliente += "\t\t\t<td>CPF: <input class=\"input--register\" type=\"text\" name=\"cpf\" value=\""+ cliente.getCpf() +"\"></td>";
+			umCliente += "\t\t\t<td>RG: <input class=\"input--register\" type=\"text\" name=\"rg\" value=\""+ cliente.getRg() +"\"></td>";
 			umCliente += "\t\t\t<td>&nbsp;</td>";
 			umCliente += "\t\t</tr>";
 			umCliente += "\t</table>";		
@@ -135,6 +133,7 @@ public class ClienteService {
 			list += "\n<tr bgcolor=\""+ bgcolor +"\">\n" + 
             		  "\t<td>" + p.getId_cliente() + "</td>\n" +
             		  "\t<td>" + p.getNome() + "</td>\n" +
+            		  "\t<td>" + p.getCpf() + "</td>\n" +
             		  "\t<td align=\"center\" valign=\"middle\"><a href=\"/cliente/" + p.getId_cliente() + "\"><img src=\"/image/detail.png\" width=\"20\" height=\"20\"/></a></td>\n" +
             		  "\t<td align=\"center\" valign=\"middle\"><a href=\"/cliente/update/" + p.getId_cliente() + "\"><img src=\"/image/update.png\" width=\"20\" height=\"20\"/></a></td>\n" +
             		  "\t<td align=\"center\" valign=\"middle\"><a href=\"javascript:confirmarDeleteCliente('" + p.getId_cliente() + "', '" + p.getNome() + "');\"><img src=\"/image/delete.png\" width=\"20\" height=\"20\"/></a></td>\n" +
@@ -143,15 +142,6 @@ public class ClienteService {
 		list += "</table>";		
 		form = form.replaceFirst("<LISTAR-CLIENTE>", list);				
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	///////////////////////////////////
 	
 	
 	public Object insert(Request request, Response response) {
@@ -228,10 +218,9 @@ public class ClienteService {
 
         if (cliente != null) {
         	cliente.setNome(request.queryParams("nome"));
-        	cliente.setPreco(Float.parseFloat(request.queryParams("preco")));
-        	cliente.setQuantidade(Integer.parseInt(request.queryParams("quantidade")));
-        	cliente.setDataFabricacao(LocalDateTime.parse(request.queryParams("dataFabricacao")));
-        	cliente.setDataValidade(LocalDate.parse(request.queryParams("dataValidade")));
+        	cliente.setBiografia(request.queryParams("biografia"));
+        	cliente.setCpf(request.queryParams("cpf"));
+        	cliente.setRg(request.queryParams("rg"));
         	clienteDAO.update(cliente);
         	response.status(200); // success
             resp = "Cliente (ID " + cliente.getId_cliente() + ") atualizado!";

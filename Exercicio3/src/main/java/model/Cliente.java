@@ -2,6 +2,11 @@ package model;
 
 public class Cliente {
 	public Cliente() {
+		this.id_cliente = -1;
+		this.nome = "";
+		this.cpf = "";
+		this.rg = "";
+		this.biografia = "";
 	}
 
 	public Cliente(int id_cliente, String nome, String cpf, String rg, String biografia) {
