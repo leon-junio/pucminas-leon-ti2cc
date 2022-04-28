@@ -22,8 +22,9 @@ public class DAOCliente extends Conexao {
 	public boolean insert(Cliente cliente) {
 		boolean status = false;
 		try {
-			String sql = "INSERT INTO cliente (biografia, cpf, rg, nome) " + "VALUES ('" + cliente.getBiografia()
-					+ "', '" + cliente.getCpf() + "', '" + cliente.getRg() + "', '" + cliente.getNome() + "');";
+			String sql = "INSERT INTO \"public\".\"Cliente\" (biografia, cpf, rg, nome) " + "VALUES ('"
+					+ cliente.getBiografia() + "', '" + cliente.getCpf() + "', '" + cliente.getRg() + "', '"
+					+ cliente.getNome() + "');";
 			PreparedStatement st = conexao.prepareStatement(sql);
 			st.executeUpdate();
 			st.close();
@@ -38,11 +39,11 @@ public class DAOCliente extends Conexao {
 		Cliente cliente = null;
 		try {
 			Statement st = conexao.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			String sql = "SELECT * FROM cliente WHERE id_cliente=" + id_cliente;
+			String sql = "SELECT * FROM \"public\".\"Cliente\" WHERE id_cliente=" + id_cliente;
 			ResultSet rs = st.executeQuery(sql);
 			if (rs.next()) {
-				cliente = new Cliente(rs.getInt("id_cliente"), rs.getString("biografia"), rs.getString("cpf"),
-						rs.getString("rg"), rs.getString("nome"));
+				cliente = new Cliente(rs.getInt("id_cliente"), rs.getString("nome"), rs.getString("cpf"),
+						rs.getString("rg"), rs.getString("biografia"));
 			}
 			st.close();
 		} catch (Exception e) {
@@ -72,11 +73,12 @@ public class DAOCliente extends Conexao {
 
 		try {
 			Statement st = conexao.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			String sql = "SELECT * FROM cliente" + ((orderBy.trim().length() == 0) ? "" : (" ORDER BY " + orderBy));
+			String sql = "SELECT * FROM \"public\".\"Cliente\""
+					+ ((orderBy.trim().length() == 0) ? "" : (" ORDER BY " + orderBy));
 			ResultSet rs = st.executeQuery(sql);
 			while (rs.next()) {
-				Cliente p = new Cliente(rs.getInt("id_cliente"), rs.getString("biografia"), rs.getString("cpf"),
-						rs.getString("rg"), rs.getString("nome"));
+				Cliente p = new Cliente(rs.getInt("id_cliente"), rs.getString("nome"), rs.getString("cpf"),
+						rs.getString("rg"), rs.getString("biografia"));
 				clientes.add(p);
 			}
 			st.close();
@@ -89,8 +91,8 @@ public class DAOCliente extends Conexao {
 	public boolean update(Cliente cliente) {
 		boolean status = false;
 		try {
-			String sql = "UPDATE cliente SET biografia = '" + cliente.getBiografia() + "' , cpf= '" + cliente.getCpf()
-					+ "'," + "rg = '" + cliente.getRg() + "', nome = '" + cliente.getNome() + "' "
+			String sql = "UPDATE \"public\".\"Cliente\" SET biografia = '" + cliente.getBiografia() + "' , cpf= '"
+					+ cliente.getCpf() + "'," + "rg = '" + cliente.getRg() + "', nome = '" + cliente.getNome() + "' "
 					+ "WHERE id_cliente = ? ;";
 			PreparedStatement st = conexao.prepareStatement(sql);
 			st.setInt(1, cliente.getId_cliente());
@@ -107,7 +109,7 @@ public class DAOCliente extends Conexao {
 		boolean status = false;
 		try {
 			Statement st = conexao.createStatement();
-			st.executeUpdate("DELETE FROM cliente WHERE id_cliente = " + id_cliente);
+			st.executeUpdate("DELETE FROM \"public\".\"Cliente\" WHERE id_cliente = " + id_cliente);
 			st.close();
 			status = true;
 		} catch (SQLException u) {
